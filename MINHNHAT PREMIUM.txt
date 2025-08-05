@@ -1,0 +1,625 @@
+-- MADE BY MINHNHAT#666
+local KEY = "MINHNHATDEPTRAI"
+local player = game.Players.LocalPlayer
+local playergui = player:WaitForChild("PlayerGui")
+
+-- Giao diện nhập KEY
+local keyGui = Instance.new("ScreenGui", playergui)
+keyGui.Name = "NHAT_HUB_KEY"
+keyGui.ResetOnSpawn = false
+
+local keyFrame = Instance.new("Frame")
+keyFrame.Size = UDim2.new(0, 370, 0, 160)
+keyFrame.Position = UDim2.new(0.5, -185, 0.4, 0)
+keyFrame.BackgroundColor3 = Color3.fromRGB(32, 32, 48)
+keyFrame.BackgroundTransparency = 0.07
+keyFrame.Active = true
+keyFrame.Draggable = true
+keyFrame.Parent = keyGui
+
+local keyTitle = Instance.new("TextLabel")
+keyTitle.Text = "NHẬT HUB - NHẬP KEY"
+keyTitle.Font = Enum.Font.GothamBold
+keyTitle.TextSize = 25
+keyTitle.TextColor3 = Color3.fromRGB(255, 221, 92)
+keyTitle.BackgroundTransparency = 1
+keyTitle.Size = UDim2.new(1, 0, 0, 45)
+keyTitle.Parent = keyFrame
+
+local keyBox = Instance.new("TextBox")
+keyBox.PlaceholderText = "Nhập key của bạn..."
+keyBox.Font = Enum.Font.Gotham
+keyBox.TextSize = 20
+keyBox.TextColor3 = Color3.fromRGB(255,255,255)
+keyBox.BackgroundColor3 = Color3.fromRGB(50, 50, 64)
+keyBox.Size = UDim2.new(0.8, 0, 0, 38)
+keyBox.Position = UDim2.new(0.1, 0, 0, 60)
+keyBox.Parent = keyFrame
+keyBox.ClearTextOnFocus = false
+
+local submitBtn = Instance.new("TextButton")
+submitBtn.Text = "KÍCH HOẠT"
+submitBtn.Font = Enum.Font.GothamBold
+submitBtn.TextSize = 20
+submitBtn.Size = UDim2.new(0.6, 0, 0, 36)
+submitBtn.Position = UDim2.new(0.2, 0, 0, 110)
+submitBtn.BackgroundColor3 = Color3.fromRGB(64, 200, 96)
+submitBtn.TextColor3 = Color3.new(1,1,1)
+submitBtn.Parent = keyFrame
+
+local keyInfo = Instance.new("TextLabel")
+keyInfo.Text = ""
+keyInfo.Font = Enum.Font.Gotham
+keyInfo.TextSize = 16
+keyInfo.TextColor3 = Color3.fromRGB(255, 100, 100)
+keyInfo.BackgroundTransparency = 1
+keyInfo.Position = UDim2.new(0, 0, 1, 0)
+keyInfo.Size = UDim2.new(1, 0, 0, 25)
+keyInfo.Parent = keyFrame
+
+-- Các màu bảy sắc cầu vồng cho các nút
+local rainbowColors = {
+    Color3.fromRGB(255, 0, 0),    -- Đỏ
+    Color3.fromRGB(255, 127, 0),  -- Cam
+    Color3.fromRGB(255, 255, 0),  -- Vàng
+    Color3.fromRGB(0, 255, 0),    -- Lục
+    Color3.fromRGB(0, 0, 255),    -- Lam
+    Color3.fromRGB(75, 0, 130),   -- Chàm
+    Color3.fromRGB(148, 0, 211),  -- Tím
+}
+
+local function createMenu()
+    local sg = Instance.new("ScreenGui", playergui)
+    sg.Name = "NHAT_HUB_MENU"
+    sg.ResetOnSpawn = false
+
+    -- Menu lớn, có thanh kéo
+    local frame = Instance.new("Frame")
+    frame.Size = UDim2.new(0, 470, 0, 520)
+    frame.Position = UDim2.new(0.5, -235, 0.5, -260)
+    frame.BackgroundColor3 = Color3.fromRGB(30, 30, 40)
+    frame.BackgroundTransparency = 0.08
+    frame.Active = true
+    frame.Draggable = true
+    frame.Parent = sg
+
+    -- Thanh kéo (scrollbar)
+    local scroll = Instance.new("ScrollingFrame")
+    scroll.Size = UDim2.new(1, -20, 1, -130)
+    scroll.Position = UDim2.new(0, 10, 0, 120)
+    scroll.BackgroundTransparency = 1
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 1200) -- tăng chiều cao để chứa nút mới
+    scroll.ScrollBarThickness = 10
+    scroll.ScrollBarImageColor3 = rainbowColors[5]
+    scroll.Parent = frame
+
+    -- Nút tắt menu -> thành hình tròn bên trái
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Text = "Tắt Menu"
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.TextSize = 16
+    closeBtn.Size = UDim2.new(0, 110, 0, 32)
+    closeBtn.Position = UDim2.new(1, -115, 0, 8)
+    closeBtn.BackgroundColor3 = rainbowColors[4]
+    closeBtn.TextColor3 = Color3.new(1,1,1)
+    closeBtn.Parent = frame
+
+    -- Nút hình tròn nổi bên trái có chữ M
+    local circleBtn = Instance.new("TextButton")
+    circleBtn.Name = "CircleButton"
+    circleBtn.Size = UDim2.new(0, 60, 0, 60)
+    circleBtn.Position = UDim2.new(0, -75, 0.5, -30)
+    circleBtn.BackgroundColor3 = rainbowColors[1]
+    circleBtn.Text = "M"
+    circleBtn.Font = Enum.Font.GothamBlack
+    circleBtn.TextSize = 33
+    circleBtn.TextColor3 = Color3.fromRGB(255,255,255)
+    circleBtn.Visible = false
+    circleBtn.BackgroundTransparency = 0
+    circleBtn.Parent = sg
+    circleBtn.ZIndex = 100
+    circleBtn.BorderSizePixel = 0
+    local uicorner = Instance.new("UICorner")
+    uicorner.CornerRadius = UDim.new(1,0)
+    uicorner.Parent = circleBtn
+
+    -- Ẩn menu thành hình tròn
+    local function minimizeToCircle()
+        frame.Visible = false
+        circleBtn.Visible = true
+    end
+    local function showFullMenu()
+        frame.Visible = true
+        circleBtn.Visible = false
+    end
+    closeBtn.MouseButton1Click:Connect(minimizeToCircle)
+    circleBtn.MouseButton1Click:Connect(showFullMenu)
+
+    -- Tiêu đề và thông tin
+    local infoLabel = Instance.new("TextLabel")
+    infoLabel.Text = "MADE BY MINHNHAT#666"
+    infoLabel.Font = Enum.Font.GothamBold
+    infoLabel.TextSize = 22
+    infoLabel.TextColor3 = rainbowColors[6]
+    infoLabel.BackgroundTransparency = 1
+    infoLabel.Size = UDim2.new(1, 0, 0, 38)
+    infoLabel.Position = UDim2.new(0, 0, 0, 44)
+    infoLabel.TextWrapped = true
+    infoLabel.Parent = frame
+
+    -- Tab menu
+    local tabFrame = Instance.new("Frame")
+    tabFrame.Size = UDim2.new(1, -20, 0, 40)
+    tabFrame.Position = UDim2.new(0, 10, 0, 90)
+    tabFrame.BackgroundTransparency = 1
+    tabFrame.Parent = frame
+
+    local tab1Btn = Instance.new("TextButton")
+    tab1Btn.Text = "Fix Lag"
+    tab1Btn.Font = Enum.Font.GothamBold
+    tab1Btn.TextSize = 17
+    tab1Btn.Size = UDim2.new(0.5, -2, 1, 0)
+    tab1Btn.Position = UDim2.new(0,0,0,0)
+    tab1Btn.BackgroundColor3 = rainbowColors[5]
+    tab1Btn.TextColor3 = Color3.fromRGB(255,255,255)
+    tab1Btn.Parent = tabFrame
+
+    local tab2Btn = Instance.new("TextButton")
+    tab2Btn.Text = "Đang phát triển..."
+    tab2Btn.Font = Enum.Font.GothamBold
+    tab2Btn.TextSize = 17
+    tab2Btn.Size = UDim2.new(0.5, -2, 1, 0)
+    tab2Btn.Position = UDim2.new(0.5,2,0,0)
+    tab2Btn.BackgroundColor3 = rainbowColors[2]
+    tab2Btn.TextColor3 = Color3.fromRGB(255,255,255)
+    tab2Btn.Parent = tabFrame
+
+    -- Tab content
+    local content1 = scroll
+    content1.Visible = true
+
+    local content2 = Instance.new("Frame")
+    content2.Size = UDim2.new(1, -20, 1, -130)
+    content2.Position = UDim2.new(0, 10, 0, 120)
+    content2.BackgroundTransparency = 1
+    content2.Visible = false
+    content2.Parent = frame
+
+    local function selectTab(tab)
+        content1.Visible = tab == 1
+        tab1Btn.BackgroundColor3 = tab == 1 and rainbowColors[5] or rainbowColors[3]
+        content2.Visible = tab == 2
+        tab2Btn.BackgroundColor3 = tab == 2 and rainbowColors[2] or rainbowColors[3]
+    end
+    tab1Btn.MouseButton1Click:Connect(function() selectTab(1) end)
+    tab2Btn.MouseButton1Click:Connect(function() selectTab(2) end)
+    selectTab(1)
+
+    -- Các nút fix lag bảy màu ở Tab1 (theo code của bạn)
+    local function createButton(text, posY, color, callback)
+        local btn = Instance.new("TextButton")
+        btn.Size = UDim2.new(1, -30, 0, 37)
+        btn.Position = UDim2.new(0, 15, 0, posY)
+        btn.Text = text
+        btn.Font = Enum.Font.GothamSemibold
+        btn.TextSize = 20
+        btn.BackgroundColor3 = color
+        btn.TextColor3 = Color3.fromRGB(255,255,255)
+        btn.AutoButtonColor = true
+        btn.Parent = content1
+        btn.MouseButton1Click:Connect(callback)
+        return btn
+    end
+
+    local y = 0
+    local padding = 8
+
+    -- Các nút gốc (giữ nguyên)
+    createButton("Low Water Graphics", y, rainbowColors[1], function()
+        local terrain = workspace:FindFirstChildOfClass("Terrain")
+        if terrain then
+            terrain.WaterWaveSize = 0
+            terrain.WaterWaveSpeed = 0
+            terrain.WaterReflectance = 0
+            terrain.WaterTransparency = 0
+        end
+    end)
+    y = y + 45
+    createButton("No Shadows", y, rainbowColors[2], function()
+        local Lighting = game:GetService("Lighting")
+        if Lighting then
+            Lighting.GlobalShadows = false
+            Lighting.FogEnd = 9e9
+            Lighting.ShadowSoftness = 0
+            if sethiddenproperty then
+                sethiddenproperty(Lighting, "Technology", 2)
+            end
+        end
+    end)
+    y = y + 45
+    createButton("Low Rendering", y, rainbowColors[3], function()
+        settings().Rendering.QualityLevel = 1
+        settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Level04
+    end)
+    y = y + 45
+    createButton("Reset Materials", y, rainbowColors[4], function()
+        local MaterialService = game:GetService("MaterialService")
+        for i, v in pairs(MaterialService:GetChildren()) do
+            v:Destroy()
+        end
+        MaterialService.Use2022Materials = false
+    end)
+
+    -- Các nút nâng cao đã có
+    y = y + 45
+    createButton("BẬT GIẢM LAG TOÀN DIỆN", y, rainbowColors[5], function()
+        for _, v in pairs(game.Lighting:GetChildren()) do pcall(function() v:Destroy() end) end
+        game.Lighting.GlobalShadows = false
+        game.Lighting.FogEnd = 1e6
+        game.Lighting.Brightness = 1
+        for _, v in pairs(game:GetDescendants()) do
+            if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Explosion") then pcall(function() v:Destroy() end)
+            elseif v:IsA("Decal") then v.Transparency = 1 end
+        end
+        game.Workspace.Terrain.WaterWaveSize = 0
+        game.Workspace.Terrain.WaterWaveSpeed = 0
+        game.Workspace.Terrain.WaterReflectance = 0
+        game.Workspace.Terrain.WaterTransparency = 1
+        for _, s in pairs(game:GetService("SoundService"):GetChildren()) do
+            if s:IsA("Sound") then s.Volume = 0 end
+        end
+        for _, v in pairs(game.Lighting:GetChildren()) do
+            if v:IsA("BloomEffect") or v:IsA("BlurEffect") or v:IsA("SunRaysEffect") then
+                v.Enabled = false
+            end
+        end
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "MINHNHAT HUB",
+            Text = "Đã bật giảm lag toàn diện!",
+            Duration = 4
+        })
+    end)
+    y = y + 45
+    createButton("TỐI ƯU LIÊN TỤC (10s)", y, rainbowColors[6], function()
+        local function removeEffects()
+            for _,v in ipairs(game:GetDescendants()) do
+                if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
+                    v.Enabled = false
+                end
+            end
+        end
+        local function lowerGraphics()
+            if settings().RenderingQualityLevel then
+                settings().RenderingQualityLevel = Enum.QualityLevel.Level01
+            end
+            if settings().RenderingFrameRate then
+                settings().RenderingFrameRate = 30
+            end
+        end
+        local function removeTextures()
+            for _,v in ipairs(game:GetDescendants()) do
+                if v:IsA("Texture") or v:IsA("Decal") then
+                    v.Transparency = 1
+                end
+            end
+        end
+        local function optimize()
+            removeEffects()
+            lowerGraphics()
+            removeTextures()
+            for _,v in ipairs(game:GetDescendants()) do
+                if v:IsA("Sound") then
+                    v.Volume = 1.0
+                end
+            end
+        end
+        spawn(function()
+            while true do
+                pcall(optimize)
+                wait(10)
+            end
+        end)
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "MINHNHAT HUB",
+            Text = "Đang tối ưu liên tục mỗi 10 giây!",
+            Duration = 4
+        })
+    end)
+    y = y + 45
+    createButton("TẮT HIỆU ỨNG CHIÊU THỨC", y, rainbowColors[7], function()
+        local EffectNames = {"Explosion", "PunchEffect", "SlashEffect", "EnergyBall", "WindEffect", "Shockwave"}
+        local function ReduceEffectsInModel(model)
+            for _, descendant in ipairs(model:GetDescendants()) do
+                if descendant:IsA("ParticleEmitter") or descendant:IsA("Trail") or descendant:IsA("Beam") then
+                    descendant.Enabled = false
+                elseif descendant:IsA("PointLight") or descendant:IsA("SpotLight") or descendant:IsA("SurfaceLight") then
+                    descendant.Enabled = false
+                elseif descendant:IsA("Sound") then
+                    descendant.Volume = 0.1
+                end
+            end
+        end
+        game.Workspace.ChildAdded:Connect(function(child)
+            for _, name in ipairs(EffectNames) do
+                if string.find(child.Name, name) then
+                    ReduceEffectsInModel(child)
+                end
+            end
+        end)
+        for _, obj in ipairs(game.Workspace:GetChildren()) do
+            for _, name in ipairs(EffectNames) do
+                if string.find(obj.Name, name) then
+                    ReduceEffectsInModel(obj)
+                end
+            end
+        end
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "MINHNHAT HUB",
+            Text = "Đã tắt hiệu ứng chiêu thức mạnh!",
+            Duration = 4
+        })
+    end)
+    y = y + 45
+    createButton("GIẢM HIỆU ỨNG CÂY & ĐÁ ĐẤT", y, rainbowColors[1], function()
+        for _, v in pairs(workspace:GetDescendants()) do
+            if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail") then
+                if v.Parent and v.Parent.Name:lower():find("tree") then v.Enabled = false end
+            elseif v:IsA("Decal") or v:IsA("Texture") then
+                if v.Parent and v.Parent.Name:lower():find("tree") then v.Transparency = 1 end
+            elseif v:IsA("BasePart") then
+                if v.Name:lower():find("tree") then v.Transparency = 0.7 end
+            end
+        end
+        spawn(function()
+            while true do
+                for _, v in pairs(workspace:GetDescendants()) do
+                    if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail") then
+                        if v.Parent and (v.Parent.Name:lower():find("rock") or v.Parent.Name:lower():find("stone")) then
+                            v.Enabled = false
+                        end
+                    elseif v:IsA("MeshPart") or v:IsA("Part") then
+                        if v.Name:lower():find("rock") or v.Name:lower():find("stone") then
+                            v.Transparency = 1
+                            if v:FindFirstChildOfClass("ParticleEmitter") then
+                                v:FindFirstChildOfClass("ParticleEmitter").Enabled = false
+                            end
+                        end
+                    end
+                end
+                wait(0.5)
+            end
+        end)
+        local function disableRockEffects(parent)
+            for _, v in pairs(parent:GetDescendants()) do
+                if v:IsA("ParticleEmitter") or v:IsA("Smoke") or v:IsA("Fire") then
+                    local n = v.Name:lower()
+                    if n:find("rock") or n:find("ground") or n:find("debris") or n:find("dust") or n:find("earth") or n:find("dirt") then
+                        v.Enabled = false
+                        if v:IsA("ParticleEmitter") then
+                            v.Rate = 0
+                            v.Lifetime = NumberRange.new(0)
+                        end
+                    end
+                end
+            end
+        end
+        disableRockEffects(workspace)
+        workspace.DescendantAdded:Connect(function(obj)
+            if obj:IsA("ParticleEmitter") or obj:IsA("Smoke") or obj:IsA("Fire") then
+                local n = obj.Name:lower()
+                if n:find("rock") or n:find("ground") or n:find("debris") or n:find("dust") or n:find("earth") or n:find("dirt") then
+                    obj.Enabled = false
+                    if obj:IsA("ParticleEmitter") then
+                        obj.Rate = 0
+                        obj.Lifetime = NumberRange.new(0)
+                    end
+                end
+            end
+        end)
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "MINHNHAT HUB",
+            Text = "Đã giảm hiệu ứng cây và đá đất!",
+            Duration = 4
+        })
+    end)
+    y = y + 45
+
+    -- NÚT MỚI: LÀM MỜ CÁC CHIÊU THỨC (SKILL EFFECTS)
+    createButton("LÀM MỜ CHIÊU THỨC - THE STRONGEST BG DELTA", y, rainbowColors[2], function()
+        -- Tạo hiệu ứng Blur cho Lighting
+        local Lighting = game:GetService("Lighting")
+        local blur = Lighting:FindFirstChild("SkillBlurEffect")
+        if not blur then
+            blur = Instance.new("BlurEffect")
+            blur.Name = "SkillBlurEffect"
+            blur.Size = 16
+            blur.Parent = Lighting
+        end
+
+        local function blurSkillEffects(obj)
+            if obj:IsA("ParticleEmitter") or obj:IsA("Trail") or obj:IsA("Beam") or obj:IsA("Explosion") then
+                if obj:IsA("ParticleEmitter") then
+                    obj.Transparency = NumberSequence.new(1)
+                    obj.Rate = 0
+                elseif obj:IsA("Trail") or obj:IsA("Beam") then
+                    obj.Transparency = NumberSequence.new(1)
+                    obj.Enabled = false
+                elseif obj:IsA("Explosion") then
+                    obj.Visible = false
+                end
+            elseif obj:IsA("Decal") or obj:IsA("Texture") then
+                obj.Transparency = 1
+            elseif obj:IsA("SurfaceLight") or obj:IsA("PointLight") or obj:IsA("SpotLight") then
+                obj.Enabled = false
+            end
+        end
+
+        for _, v in pairs(game.Workspace:GetDescendants()) do
+            blurSkillEffects(v)
+        end
+
+        game.Workspace.DescendantAdded:Connect(function(obj)
+            blurSkillEffects(obj)
+        end)
+
+        game.StarterGui:SetCore("SendNotification", {
+            Title = "MINHNHAT HUB",
+            Text = "Đã làm mờ các chiêu thức!",
+            Duration = 4
+        })
+    end)
+    y = y + 45
+
+    -- NÚT MỚI: ULTRA LAG FIX (chạy full script fix lag mạnh nhất)
+    createButton("ULTRA SUPER LAG FIX (MAX)", y, rainbowColors[3], function()
+        pcall(function()
+            -- 1. Xóa mọi hiệu ứng, mesh, phụ kiện, decal, texture, âm thanh...
+            for _, v in ipairs(workspace:GetDescendants()) do
+                if v:IsA("ParticleEmitter") or v:IsA("Beam") or v:IsA("Trail")
+                or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") or v:IsA("Explosion")
+                or v:IsA("MeshEffect") then
+                    pcall(function() v.Enabled = false end)
+                    pcall(function() v:Destroy() end)
+                end
+                if v:IsA("PointLight") or v:IsA("SpotLight") or v:IsA("SurfaceLight") then
+                    v.Enabled = false
+                    v.Brightness = 0
+                end
+                if v:IsA("Decal") or v:IsA("Texture") then
+                    v.Transparency = 1
+                end
+                if v:IsA("Sound") then
+                    v.Volume = 0
+                    pcall(function() v:Stop() end)
+                end
+                if v:IsA("BasePart") then
+                    v.Material = Enum.Material.SmoothPlastic
+                    v.Reflectance = 0
+                    v.CastShadow = false
+                end
+                if v:IsA("SpecialMesh") then
+                    pcall(function() v:Destroy() end)
+                end
+            end
+
+            -- 2. Xóa/ẩn phụ kiện, quần áo, mũ, tóc,... cho người chơi và NPC
+            for _, plr in ipairs(game:GetService("Players"):GetPlayers()) do
+                if plr.Character then
+                    for _, obj in ipairs(plr.Character:GetChildren()) do
+                        if obj:IsA("Accessory") or obj:IsA("Hat") or obj:IsA("FaceAccessory") or obj:IsA("HairAccessory")
+                        or obj:IsA("Shirt") or obj:IsA("Pants") or obj:IsA("ShirtGraphic") then
+                            pcall(function() obj:Destroy() end)
+                        end
+                    end
+                end
+            end
+
+            -- 3. Xóa sạch các folder effects, debris, explosions, particles,...
+            for _, v in ipairs(workspace:GetChildren()) do
+                if v.Name:lower():find("effect") or v.Name:lower():find("debris")
+                or v.Name:lower():find("explosion") or v.Name:lower():find("particle") then
+                    pcall(function() v:Destroy() end)
+                end
+            end
+
+            -- 4. Tắt mọi hiệu ứng ánh sáng phụ Lighting
+            local Lighting = game:GetService("Lighting")
+            for _, effect in ipairs(Lighting:GetChildren()) do
+                if effect:IsA("BlurEffect") or effect:IsA("SunRaysEffect")
+                or effect:IsA("ColorCorrectionEffect") or effect:IsA("BloomEffect")
+                or effect:IsA("DepthOfFieldEffect") or effect:IsA("Atmosphere") or effect:IsA("Sky") then
+                    pcall(function() effect.Enabled = false end)
+                    pcall(function() effect:Destroy() end)
+                end
+            end
+
+            -- 5. Giảm tối đa chất lượng nước, bóng, fog, ánh sáng
+            Lighting.Brightness = 1
+            Lighting.GlobalShadows = false
+            Lighting.FogEnd = 1e5
+            Lighting.FogStart = 0
+            Lighting.WaterTransparency = 1
+            Lighting.WaterWaveSize = 0
+            Lighting.WaterWaveSpeed = 0
+            Lighting.WaterReflectance = 0
+            Lighting.Ambient = Color3.fromRGB(255,255,255)
+            Lighting.OutdoorAmbient = Color3.fromRGB(255,255,255)
+
+            -- 6. Tắt Terrain decoration
+            if workspace:FindFirstChildOfClass("Terrain") then
+                local Terrain = workspace:FindFirstChildOfClass("Terrain")
+                Terrain.Decoration = false
+                Terrain.WaterTransparency = 1
+            end
+
+            -- 7. Bật Streaming Mode nếu được phép
+            pcall(function()
+                workspace.StreamingEnabled = true
+                workspace.StreamingMinRadius = 16
+                workspace.StreamingTargetRadius = 32
+            end)
+
+            -- 8. Tối ưu camera
+            pcall(function()
+                local cam = workspace.CurrentCamera
+                cam.FieldOfView = 70
+                for _,v in pairs(cam:GetChildren()) do
+                    if v:IsA("BlurEffect") or v:IsA("DepthOfFieldEffect") then
+                        v.Enabled = false
+                    end
+                end
+            end)
+
+            -- 9. Tối ưu settings Executor
+            pcall(function()
+                settings().Rendering.QualityLevel = Enum.QualityLevel.Level01
+                settings().Rendering.MeshPartDetailLevel = Enum.MeshPartDetailLevel.Low
+                settings().Rendering.TextureQuality = Enum.TextureQuality.Low
+            end)
+
+            -- 10. Tắt các service update không quan trọng (cho dev)
+            pcall(function()
+                if game:GetService("RunService"):IsClient() then
+                    game:GetService("RunService"):Set3dRenderingEnabled(true)
+                end
+            end)
+
+            -- 11. Xóa các UI hiệu ứng nặng
+            pcall(function()
+                for _, v in ipairs(game:GetService("CoreGui"):GetDescendants()) do
+                    if v:IsA("BlurEffect") or v:IsA("ImageLabel") or v:IsA("ImageButton") then
+                        if v.Image and (v.Image:lower():find("effect") or v.Image:lower():find("blur")) then
+                            v.Visible = false
+                        end
+                    end
+                end
+            end)
+
+            game.StarterGui:SetCore("SendNotification", {
+                Title = "MINHNHAT HUB",
+                Text = "Đã ULTRA LAG FIX! (MAX)",
+                Duration = 4
+            })
+        end)
+    end)
+    y = y + 45
+
+end
+
+submitBtn.MouseButton1Click:Connect(function()
+    local userKey = keyBox.Text or ""
+    if userKey == KEY then
+        keyInfo.Text = "Đúng key! Đang mở menu..."
+        wait(0.5)
+        keyGui:Destroy()
+        createMenu()
+    else
+        keyInfo.Text = "Sai key! Liên hệ MinhNhat để lấy key."
+    end
+end)
+
+keyBox.FocusLost:Connect(function(enter)
+    if enter then
+        submitBtn:FireMouseButton1Click()
+    end
+end)
